@@ -7,19 +7,33 @@ Proyecto grupal del curso **Integración 1**, desarrollado en PHP, MySQL, JavaSc
 ## 📦 Estructura del Proyecto
 /LOGIN
 ├── base_datos/
+
 │ └── gestion_clinica.sql
+
 ├── img/
+
 │ └── (imágenes del sistema)
+
 ├── js/
+
 │ ├── especialidades.js
+
 │ └── medicos.js
+
 ├── php/
+
 │ ├── conexion.php
+
 │ ├── medicos.php
+
 │ ├── guardar_medico.php
+
 │ ├── eliminar_medico.php
+
 │ └── ...
+
 ├── especialidades.html
+
 ├── login2.html
 
 ---
