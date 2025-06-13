@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia Clínica Digital </title>
+    <style>
+        /* === ESTILOS PREMIUM === */
+        :root {
+            --azul-essalud: #0077b6;
+            --turquesa: #00b4d8;
+            --fondo: #f0faff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--azul-essalud), var(--turquesa));
+            min-height: 100vh;
+            padding: 2rem;
+            display: grid;
+            place-items: center;
+        }
+
+        .contenedor-principal {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 1200px;
+            min-height: 80vh;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* === CABECERA DINÁMICA === */
+        .cabecera {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid var(--turquesa);
+        }
+
+        .titulo-principal {
+            color: var(--azul-essalud);
+            font-size: 2.4rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icono-medico {
+            width: 45px;
+            height: 45px;
+        }
+
+        /* === TARJETA PACIENTE === */
+        .tarjeta-paciente {
+            background: var(--fondo);
+            border-radius: 20px;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 180, 216, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .tarjeta-paciente:hover {
+            transform: translateY(-5px);
+        }
+
+        .grupo-info {
+            padding: 1rem;
+        }
+
+        .etiqueta {
+            color: #1d3557;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .valor {
+            color: var(--azul-essalud);
+            font-size: 1.1rem;
+            padding: 0.8rem;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        /* === LINEA DE TIEMPO INTERACTIVA === */
+        .linea-tiempo {
+            position: relative;
+            padding: 2rem 0;
+            margin-left: 2rem;
+        }
+
+        .evento {
+            position: relative;
+            padding: 1.5rem;
+            margin-left: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            margin-bottom: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .evento:before {
+            content: '';
+            position: absolute;
+            left: -2.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            background: var(--turquesa);
+            border-radius: 50%;
+        }
+
+        .evento:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 180, 216, 0.2);
+        }
+
+        /* === RESPONSIVO === */
+        @media (max-width: 768px) {
+            .contenedor-principal {
+                padding: 1.5rem;
+            }
+
+            .cabecera {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-principal">
+        <header class="cabecera">
+            <h1 class="titulo-principal">
+                🏥
+                Historia Clínica Digital
+            </h1>
+            <div class="valor">Fecha de Creación: <span id="fecha-actualizacion">15/06/2020</span></div>
+        </header>
+
+        <!-- Tarjeta de Información del Paciente -->
+        <section class="tarjeta-paciente">
+            <div class="grupo-info">
+                <span class="etiqueta">ID Paciente</span>
+                <div class="valor">📋 825164</div>
+            </div>
+
+            <div class="grupo-info">
+                <span class="etiqueta">ID Historia Clínica</span>
+                <div class="valor">📋 HC-825164</div>
+            </div>
+
+            <div class="grupo-info">
+                <span class="etiqueta">Nombre Completo</span>
+                <div class="valor">👤 Roberto Carlos García</div>
+            </div>
+            <div class="grupo-info">
+                <span class="etiqueta">Edad</span>
+                <div class="valor">🎂 45 años (15/05/1979)</div>
+            </div>
+        </section>
+
+        <!-- Línea de Tiempo Médica -->
+        <section class="linea-tiempo">
+            <article class="evento">
+                <h3>Consulta de Cardiología - 12/05/2024</h3>
+                <p>Presión arterial: 120/80 mmHg</p>
+                <p>Medicación recetada: Losartán 50mg</p>
+            </article>
+
+            <article class="evento">
+                <h3>Control Postoperatorio - 10/04/2024</h3>
+                <p>Recuperación satisfactoria</p>
+                <p>Suturas retiradas</p>
+            </article>
+        </section>
+    </div>
+
+    <script>
+        // Animaciones de carga
+        document.querySelectorAll('.evento').forEach((evento, index) => {
+            setTimeout(() => {
+                evento.style.opacity = '1';
+                evento.style.transform = 'translateX(0)';
+            }, index * 150);
+        });
+    </script>
+</body>
+</html>

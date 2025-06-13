@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Pacientes - ESSALUD</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0077b6, #00b4d8);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        h1 {
+            color: #0077b6;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid #00b4d8;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            background: #0077b6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #03045e;
+        }
+
+        .patients-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .patients-table th,
+        .patients-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #00b4d8;
+        }
+
+        .patients-table th {
+            background-color: #0077b6;
+            color: white;
+        }
+
+        .add-patient-form {
+            display: none;
+            background: #f0faff;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .form-group label {
+            color: #03045e;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            padding: 0.6rem;
+            border: 2px solid #00b4d8;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .patients-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .form-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Pacientes</h1>
+        
+        <div class="search-section">
+            <input type="text" class="search-input" placeholder="Buscar paciente...">
+            <button class="btn" onclick="toggleAddForm()">Nuevo Paciente</button>
+        </div>
+
+        <table class="patients-table">
+            <thead>
+                <tr>
+                    <th>ID Paciente</th>
+                    <th>Nombre</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Género</th>
+                    <th>Dirección</th>
+                    <th>Teléfono</th>
+                    <th>Correo</th>
+                </tr>
+            </thead>
+            <tbody id="patients-list">
+                <!-- Datos de pacientes se cargarán aquí -->
+            </tbody>
+        </table>
+
+        <div class="add-patient-form" id="addForm">
+            <h2>Agregar Nuevo Paciente</h2>
+            <form id="patientForm">
+                <div class="form-group">
+                    <label>Nombre Completo:</label>
+                    <input type="text" id="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Nacimiento:</label>
+                    <input type="date" id="birthdate" required>
+                </div>
+                <div class="form-group">
+                    <label>Género:</label>
+                    <select id="gender" required>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Dirección:</label>
+                    <input type="text" id="address" required>
+                </div>
+                <div class="form-group">
+                    <label>Teléfono:</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label>Correo electrónico:</label>
+                    <input type="email" id="email">
+                </div>
+                <button type="submit" class="btn">Guardar Paciente</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Datos iniciales de ejemplo
+        const patients = [
+            {
+                id: 821224455,
+                name: "Jose grey",
+                birthdate: "28-02-2001",
+                gender: "M",
+                address: "XXXXXX",
+                phone: "9342352",
+                email: "josesa@"
+            },
+            // ... agregar más pacientes según el ejemplo
+        ];
+
+        // Función para renderizar la tabla
+        function renderPatients() {
+            const tbody = document.getElementById('patients-list');
+            tbody.innerHTML = patients.map(patient => `
+                <tr>
+                    <td>${patient.id}</td>
+                    <td>${patient.name}</td>
+                    <td>${patient.birthdate}</td>
+                    <td>${patient.gender}</td>
+                    <td>${patient.address}</td>
+                    <td>${patient.phone}</td>
+                    <td>${patient.email || '---'}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Mostrar/ocultar formulario
+        function toggleAddForm() {
+            const form = document.getElementById('addForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Validación de formulario
+        document.getElementById('patientForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const newPatient = {
+                id: Date.now(),
+                name: document.getElementById('name').value,
+                birthdate: document.getElementById('birthdate').value,
+                gender: document.getElementById('gender').value,
+                address: document.getElementById('address').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value
+            };
+
+            patients.push(newPatient);
+            renderPatients();
+            toggleAddForm();
+            document.getElementById('patientForm').reset();
+        });
+
+        // Inicializar tabla
+        renderPatients();
+    </script>
+</body>
+</html>

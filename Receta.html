@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Recetas - ESSALUD</title>
+    <style>
+        /* === ESTILOS BASE === */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0077b6, #00b4d8);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+            padding: 2rem;
+            margin: 0 auto;
+            max-width: 1200px;
+        }
+
+        /* === ENCABEZADO === */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 3px solid #00b4d8;
+        }
+
+        .header h1 {
+            color: #0077b6;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* === TABLA DE RECETAS === */
+        .recetas-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .recetas-table th,
+        .recetas-table td {
+            padding: 1.2rem;
+            text-align: left;
+            border-bottom: 2px solid #00b4d8;
+        }
+
+        .recetas-table th {
+            background-color: #0077b6;
+            color: white;
+            font-weight: bold;
+        }
+
+        .recetas-table tr:hover {
+            background-color: #f0faff;
+            transition: background 0.3s ease;
+        }
+
+        .indicaciones-cell {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .acciones-btn {
+            background: #00b4d8;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .acciones-btn:hover {
+            background: #0096c7;
+            transform: translateY(-2px);
+        }
+
+        /* === MODAL DETALLES === */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 600px;
+            z-index: 1000;
+        }
+
+        /* === RESPONSIVIDAD === */
+        @media (max-width: 768px) {
+            .recetas-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Registro de Recetas Médicas👨‍⚕️</h1>
+            <p style="color: #6c757d;">Sistema Farmacéutico</p>
+        </div>
+
+        <table class="recetas-table">
+            <thead>
+                <tr>
+                    <th>ID Receta</th>
+                    <th>Medicamento</th>
+                    <th>Indicaciones</th>
+                    <th>ID Consulta</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="recetas-list">
+                <!-- Datos se cargarán dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal Detalles -->
+    <div class="modal" id="detallesModal">
+        <div class="modal-content">
+            <h2 style="color: #0077b6; margin-bottom: 1rem;">Detalles de Receta Médica</h2>
+            <p><strong>ID Receta:</strong> <span id="modal-id"></span></p>
+            <p><strong>Medicamento:</strong> <span id="modal-medicamento"></span></p>
+            <p><strong>ID Consulta:</strong> <span id="modal-consulta"></span></p>
+            <p><strong>Indicaciones Completas:</strong></p>
+            <div id="modal-indicaciones" style="background: #f8f9fa; padding: 1rem; border-radius: 10px; margin-top: 0.5rem;"></div>
+            <button onclick="cerrarModal()" class="acciones-btn" style="margin-top: 1rem;">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        // Datos de ejemplo
+        const recetas = [
+            {
+                id_receta: 1,
+                medicamento: "Paracetamol 500mg",
+                indicaciones: "Tomar 1 comprimido cada 8 horas por 5 días. No exceder 3g diarios. Administrar con alimentos.",
+                id_consulta: 45
+            },
+            {
+                id_receta: 2,
+                medicamento: "Omeprazol 20mg",
+                indicaciones: "Tomar 1 cápsula diaria en ayunas, 30 minutos antes del desayuno. Duración: 15 días.",
+                id_consulta: 46
+            }
+        ];
+
+        // Función para mostrar detalles
+        function mostrarDetalles(id) {
+            const receta = recetas.find(r => r.id_receta === id);
+            document.getElementById('modal-id').textContent = receta.id_receta;
+            document.getElementById('modal-medicamento').textContent = receta.medicamento;
+            document.getElementById('modal-consulta').textContent = `CONS-${receta.id_consulta}`;
+            document.getElementById('modal-indicaciones').textContent = receta.indicaciones;
+            document.getElementById('detallesModal').style.display = 'block';
+        }
+
+        // Función para cerrar modal
+        function cerrarModal() {
+            document.getElementById('detallesModal').style.display = 'none';
+        }
+
+        // Renderizar tabla
+        function renderizarTabla() {
+            const tbody = document.getElementById('recetas-list');
+            tbody.innerHTML = recetas.map(receta => `
+                <tr>
+                    <td>${receta.id_receta}</td>
+                    <td>${receta.medicamento}</td>
+                    <td class="indicaciones-cell">${receta.indicaciones}</td>
+                    <td>CONS-${receta.id_consulta}</td>
+                    <td>
+                        <button class="acciones-btn" onclick="mostrarDetalles(${receta.id_receta})">
+                            Ver Completo
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Inicializar
+        renderizarTabla();
+    </script>
+</body>
+</html>

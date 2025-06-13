@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!-- Archivo: login.html -->
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión - ESSALUD</title>
+  <style>
+    /* Reset y tipografía base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+    body {
+      background-color: #e0f7fa; /* Tonos turquesa claro */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-container {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 320px;
+    }
+    .login-container h2 {
+      text-align: center;
+      color: #006064; /* Azul oscuro acorde a la marca */
+      margin-bottom: 1.5rem;
+    }
+    .login-container label {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: #004d40;
+      font-size: 0.9rem;
+    }
+    .login-container input {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 2px solid #b2ebf2;
+      border-radius: 6px;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    .login-container input:focus {
+      border-color: #0097a7;
+      outline: none;
+    }
+    .login-container button {
+      width: 100%;
+      padding: 0.75rem;
+      background-color: #0097a7;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .login-container button:hover {
+      background-color: #00796b;
+    }
+    @media (max-width: 400px) {
+      .login-container {
+        width: 90%;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Iniciar Sesión</h2>
+    <form id="loginForm">
+      <label for="userId">ID usuario</label>
+      <input type="text" id="userId" name="userId" placeholder="Ingrese su ID" required>
+
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+
+      <button type="submit">Entrar</button>
+    </form>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const userId = document.getElementById('userId').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (!userId || !username || !password) {
+        alert('Por favor, complete todos los campos.');
+        return;
+      }
+      // Aquí iría la llamada al backend para autenticar
+      console.log({ userId, username, password });
+      alert('Intentando iniciar sesión...');
+    });
+  </script>
+</body>
+</html>

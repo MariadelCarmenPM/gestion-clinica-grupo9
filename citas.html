@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Citas Médicas - EsSalud</title>
+    <style>
+        :root {
+            --azul-essalud: #0073aa;
+            --turquesa-essalud: #00b9d1;
+            --fondo: #f0f9ff;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background:linear-gradient(135deg, #0077b6, #00b4d8);
+            padding: 2rem;
+        }
+
+        .contenedor-principal {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 115, 170, 0.1);
+            overflow: hidden;
+        }
+
+        .encabezado {
+            background: linear-gradient(135deg, #0077b6, #00b9d1);
+            padding: 1.5rem;
+            color: white;
+            text-align: center;
+        }
+
+        .controles {
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            background: #e6f4ff;
+        }
+
+        .busqueda {
+            flex-grow: 1;
+            padding: 0.5rem;
+            border: 2px solid var(--azul-essalud);
+            border-radius: 5px;
+        }
+
+        .boton {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .boton-primario {
+            background: var(--azul-essalud);
+            color: white;
+        }
+
+        .boton-primario:hover {
+            background: #005c8a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: var(--azul-essalud);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            position: sticky;
+            top: 0;
+            border-bottom: 3px solid var(--turquesa-essalud);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e0f3ff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fcff;
+        }
+
+        tr:hover {
+            background-color: #e6f4ff;
+        }
+
+        .estado {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .programada {
+            background: #00b9d1;
+            color: white;
+        }
+
+        .acciones {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .boton-accion {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .boton-secundario {
+            background: var(--turquesa-essalud);
+            color: white;
+        }
+
+        .boton-secundario:hover {
+            background: #009eb4;
+        }
+
+        .boton-peligro {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        .boton-peligro:hover {
+            background: #cc0000;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+            
+            .contenedor-principal {
+                border-radius: 0;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        /* Formulario modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contenido-modal {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor-principal">
+        <div class="encabezado">
+            <h1>🏥 Sistema de Gestión de Citas</h1>
+        </div>
+        
+        <div class="controles">
+            <input type="search" class="busqueda" placeholder="Buscar cita...">
+            <button class="boton boton-primario" onclick="mostrarModal()">➕ Nueva Cita</button>
+            <button class="boton boton-primario" onclick="window.print()">🖨️ Imprimir</button>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Paciente</th>
+                    <th>Médico</th>
+                    <th>Fecha y Hora</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-citas">
+                <!-- Datos generados dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para nueva cita -->
+    <div class="modal" id="modal">
+        <div class="contenido-modal">
+            <h2>📅 Nueva Cita Médica</h2>
+            <form id="form-cita" onsubmit="agregarCita(event)">
+                <input type="text" placeholder="Paciente" required>
+                <input type="text" placeholder="Médico" required>
+                <input type="text" placeholder="Especialidad" required>
+                <input type="datetime-local" required>
+                <select required>
+                    <option value="">Estado</option>
+                    <option value="Programada">Programada</option>
+                    <option value="Cancelada">Cancelada</option>
+                    <option value="Completada">Completada</option>
+                </select>
+                <div class="acciones">
+                    <button type="submit" class="boton boton-primario">Guardar</button>
+                    <button type="button" class="boton boton-peligro" onclick="cerrarModal()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Datos iniciales
+        let citas = [
+            {id: 62626, paciente: 'Roberto C', medico: 'Dr. Farid', fecha: '2025-05-12T18:00', estado: 'Programada'},
+            {id: 54647, paciente: 'Julian', medico: 'Dr. Liam', fecha: '2025-06-14T09:10', estado: 'Programada'},
+            {id: 55667, paciente: 'Dante', medico: 'Dra. Zuzan', fecha: '2025-06-15T12:00', estado: 'Programada'},
+            {id: 87982, paciente: 'Lucero', medico: 'Dra. Celia', fecha: '2025-06-15T02:30', estado: 'Programada'},
+            {id: 34738, paciente: 'David', medico: 'Dr. Gonsalo', fecha: '2025-07-16T07:00', estado: 'Programada'},
+            {id: 22355, paciente: 'Diego', medico: 'Dr. Ruben', fecha: '2025-07-16T09:00', estado: 'Programada'},
+            {id: 23157, paciente: 'Fernando', medico: 'Dra. Ximena', fecha: '2025-08-17T10:00', estado: 'Programada'}
+        ];
+
+        // Funcionalidades
+        function renderizarTabla() {
+            const tbody = document.getElementById('tabla-citas');
+            tbody.innerHTML = citas.map(cita => `
+                <tr>
+                    <td>${cita.id}</td>
+                    <td>${cita.paciente}</td>
+                    <td>${cita.medico}</td>
+                    <td>${new Date(cita.fecha).toLocaleString('es-PE')}</td>
+                    <td><span class="estado ${cita.estado.toLowerCase()}">${cita.estado}</span></td>
+                    <td>
+                        <div class="acciones">
+                            <button class="boton boton-secundario" onclick="editarCita(${cita.id})">✏️</button>
+                            <button class="boton boton-peligro" onclick="eliminarCita(${cita.id})">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function agregarCita(e) {
+            e.preventDefault();
+            // Lógica para agregar nueva cita
+            cerrarModal();
+        }
+
+        function editarCita(id) {
+            // Lógica para editar
+            alert('Editar cita: ' + id);
+        }
+
+        function eliminarCita(id) {
+            if(confirm('¿Está seguro de eliminar esta cita?')) {
+                citas = citas.filter(c => c.id !== id);
+                renderizarTabla();
+            }
+        }
+
+        function mostrarModal() {
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', renderizarTabla);
+    </script>
+</body>
+</html>
