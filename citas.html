@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Registrar Cita</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f1f8ff;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background-color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #004b8d;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 1.5rem;
+      background-color: #0073e6;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background-color: #005bb5;
+    }
+    .btn-home {
+      background-color: #6c757d;
+      margin-top: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🩺 Registrar Cita</h2>
+    <form id="citaForm">
+      <label for="id_paciente">Paciente:</label>
+      <select name="id_paciente" id="id_paciente" required></select>
+
+      <label for="id_medico">Médico:</label>
+      <select name="id_medico" id="id_medico" required></select>
+
+      <label for="fecha_cita">Fecha:</label>
+      <input type="date" name="fecha_cita" required />
+
+      <label for="hora_cita">Hora:</label>
+      <input type="time" name="hora_cita" required />
+
+      <label for="motivo_consulta">Motivo de Consulta:</label>
+      <textarea name="motivo_consulta" rows="3" required></textarea>
+
+      <label for="diagnostico">Diagnóstico:</label>
+      <textarea name="diagnostico" rows="3" required></textarea>
+
+      <label for="estado">Estado:</label>
+      <select name="estado" required>
+        <option value="pendiente">Pendiente</option>
+        <option value="atendida">Atendida</option>
+        <option value="cancelada">Cancelada</option>
+      </select>
+
+      <button type="submit">Registrar Cita ✅</button>
+    </form>
+    <button class="btn-home" onclick="location.href='principal.html'">🏠 Volver al Inicio</button>
+  </div>
+
+  <script src="js/citas.js"></script>
+</body>
+</html>
+
+

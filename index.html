@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Clínica</title>
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <div class="main-container">
+    <div class="login-container">
+
+      <div class="logo-wrapper">
+        <img src="img/logo.png" alt="Logo Clínica" class="logo-img">
+      </div>
+
+      <h1>Bienvenido</h1>
+      <h2>Iniciar Sesión</h2>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">Usuario</label>
+          <input type="text" id="username" required>
+          <div class="error" id="userError">Campo obligatorio</div>
+        </div>
+      
+        <div class="form-group">
+          <label for="password">Contraseña</label>
+          <input type="password" id="password" required>
+          <div class="error" id="passError">Campo obligatorio</div>
+        </div>
+      
+        <button type="submit">Ingresar</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const userError = document.getElementById('userError');
+    const passError = document.getElementById('passError');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      userError.style.display = 'none';
+      passError.style.display = 'none';
+
+      let isValid = true;
+
+      if (!username) {
+        userError.textContent = "El campo usuario es obligatorio";
+        userError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (!password) {
+        passError.textContent = "El campo contraseña es obligatorio";
+        passError.style.display = 'block';
+        isValid = false;
+      }
+
+      if (!isValid) return;
+
+      
+      if (username === 'admin' && password === '1234') {
+        window.location.href = 'principal.html';
+      } else {
+        alert('Usuario o contraseña incorrectos');
+      }
+    });
+  </script>
+  <script src="js/login.js"></script>
+</body>
+</html>
+
+

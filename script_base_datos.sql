@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-06-2025 a las 08:47:46
+-- Tiempo de generación: 13-06-2025 a las 23:51:49
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -36,6 +36,14 @@ CREATE TABLE `citas` (
   `estado` enum('pendiente','atendida','cancelada') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `citas`
+--
+
+INSERT INTO `citas` (`id_cita`, `id_paciente`, `id_medico`, `fecha_cita`, `hora_cita`, `estado`) VALUES
+(1, 4, 8, '2025-06-21', '16:21:00', 'pendiente'),
+(2, 2, 9, '2025-06-26', '17:22:00', 'pendiente');
+
 -- --------------------------------------------------------
 
 --
@@ -46,6 +54,16 @@ CREATE TABLE `configuraciones` (
   `clave` varchar(50) NOT NULL,
   `valor` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `configuraciones`
+--
+
+INSERT INTO `configuraciones` (`clave`, `valor`) VALUES
+('correo', 'info@clinicavida.com'),
+('horario_atencion', 'Lunes a Viernes, 7am - 9pm'),
+('nombre_clinica', 'Clínica Salud '),
+('telefono', '987654321');
 
 -- --------------------------------------------------------
 
@@ -60,6 +78,13 @@ CREATE TABLE `disponibilidad_medica` (
   `hora_inicio` time NOT NULL,
   `hora_fin` time NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `disponibilidad_medica`
+--
+
+INSERT INTO `disponibilidad_medica` (`id_disponibilidad`, `id_medico`, `dia_semana`, `hora_inicio`, `hora_fin`) VALUES
+(1, 9, 'Jueves', '17:16:00', '17:17:00');
 
 -- --------------------------------------------------------
 
@@ -96,6 +121,18 @@ CREATE TABLE `historias_clinicas` (
   `tratamiento` text NOT NULL,
   `id_medico` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `historias_clinicas`
+--
+
+INSERT INTO `historias_clinicas` (`id_historia`, `id_paciente`, `fecha_registro`, `motivo_consulta`, `diagnostico`, `tratamiento`, `id_medico`) VALUES
+(6, 4, '2025-06-19', 'Cita programada', '', '', 8),
+(7, 2, '2025-06-21', 'Cita programada', '', '', 8),
+(8, 2, '2025-06-25', 'Cita programada', '', '', 8),
+(9, 4, '2025-06-19', 'ulceras', 'TOMAR AMOXICILINA 500GR', '', 9),
+(11, 4, '2025-06-21', 'asd', '234', '', 8),
+(12, 2, '2025-06-26', '5645', 'fghdg', '', 9);
 
 -- --------------------------------------------------------
 
@@ -135,7 +172,8 @@ CREATE TABLE `medicos` (
 --
 
 INSERT INTO `medicos` (`id_medico`, `id_usuario`, `nombres`, `apellidos`, `cmp`, `id_especialidad`, `telefono`, `direccion`, `correo`) VALUES
-(8, 1, 'María', 'Prado', '1212', 17, '957589039', 'A.v Los Claveles, MzD3, Lote 03 , AAHH ANCIETA ALTA', 'amyabigail1522@gmail.com');
+(8, 1, 'María', 'Prado', '1212', 17, '957589039', 'A.v Los Claveles, MzD3, Lote 03 , AAHH ANCIETA ALTA', 'amyabigail1522@gmail.com'),
+(9, 1, 'JUANA ', 'PORTILLO CARRASCO', '3131', 18, '999999888', 'AV LOS DURAZNOS', 'estrella111@hotmail.com');
 
 -- --------------------------------------------------------
 
@@ -155,6 +193,14 @@ CREATE TABLE `pacientes` (
   `correo` varchar(100) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `pacientes`
+--
+
+INSERT INTO `pacientes` (`id_paciente`, `dni`, `nombres`, `apellidos`, `fecha_nacimiento`, `sexo`, `direccion`, `telefono`, `correo`) VALUES
+(2, '72510489', 'María', 'Prado', '9999-04-22', 'M', 'A.v Los Claveles, MzD3, Lote 03 , AAHH ANCIETA ALTA', '957589039', 'mizhacore2204@gmail.com'),
+(4, '72516784', 'MARCO JUAN', 'ANTONILLO PORTILLO', '1998-05-15', 'M', 'AV LOS TERCEROS', '952647158', 'marco111@gmail.com');
+
 -- --------------------------------------------------------
 
 --
@@ -168,6 +214,13 @@ CREATE TABLE `reportes` (
   `fecha_generado` datetime NOT NULL,
   `generado_por` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `reportes`
+--
+
+INSERT INTO `reportes` (`id_reporte`, `titulo`, `contenido`, `fecha_generado`, `generado_por`) VALUES
+(1, 'DOCU', 'ASFCSGBWRG', '2025-06-13 23:04:12', 1);
 
 -- --------------------------------------------------------
 
@@ -273,13 +326,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `citas`
 --
 ALTER TABLE `citas`
-  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `disponibilidad_medica`
 --
 ALTER TABLE `disponibilidad_medica`
-  MODIFY `id_disponibilidad` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_disponibilidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `especialidades`
@@ -291,7 +344,7 @@ ALTER TABLE `especialidades`
 -- AUTO_INCREMENT de la tabla `historias_clinicas`
 --
 ALTER TABLE `historias_clinicas`
-  MODIFY `id_historia` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_historia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `logs_consultas`
@@ -303,19 +356,19 @@ ALTER TABLE `logs_consultas`
 -- AUTO_INCREMENT de la tabla `medicos`
 --
 ALTER TABLE `medicos`
-  MODIFY `id_medico` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_medico` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `reportes`
 --
 ALTER TABLE `reportes`
-  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

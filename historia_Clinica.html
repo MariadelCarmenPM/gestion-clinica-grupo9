@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historia Clínica Digital📋</title>
+    <style>
+       
+        :root {
+            --azul-essalud: #0077b6;
+            --turquesa: #00b4d8;
+            --fondo: #f0faff;
+        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',system-ui; }
+        body {
+            background: linear-gradient(135deg, var(--azul-essalud), var(--turquesa));
+            min-height:100vh; padding:2rem; display:grid; place-items:center;
+        }
+        .contenedor-principal {
+            background: rgba(255,255,255,0.98);
+            border-radius:25px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.15);
+            width:100%; max-width:1200px; min-height:80vh;
+            padding:2.5rem; display:flex; flex-direction:column; gap:1.5rem;
+        }
+        .cabecera { display:flex; justify-content:space-between; align-items:center; padding-bottom:1.5rem; border-bottom:3px solid var(--turquesa); }
+        .titulo-principal { color:var(--azul-essalud); font-size:2.4rem; display:flex; align-items:center; gap:1rem; }
+        .valor { color:#1d3557; font-weight:600; }
+        .search-section { display:flex; gap:1rem; align-items:center; }
+        .search-input { flex:1; padding:0.8rem; border:2px solid var(--turquesa); border-radius:8px; }
+        .btn { padding:0.8rem 1.5rem; background:var(--azul-essalud); color:white; border:none; border-radius:8px; cursor:pointer; transition:background 0.3s ease; }
+        .btn:hover { background:#03045e; }
+        .tarjeta-paciente,
+        .linea-tiempo { margin-top:1rem; }
+        .tarjeta-paciente { background:var(--fondo); border-radius:20px; padding:2rem; display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem; }
+        .etiqueta { font-weight:600; margin-bottom:0.5rem; display:block; color:#1d3557; }
+        .valor-celda { background:white; border-radius:10px; padding:0.8rem; }
+        .linea-tiempo { position:relative; padding:2rem 0; }
+        .evento { position:relative; background:white; border-radius:15px; box-shadow:0 3px 10px rgba(0,0,0,0.08); padding:1.5rem; margin-bottom:2rem; cursor:pointer; }
+        .evento:before { content:''; position:absolute; left:-1.5rem; top:50%; transform:translateY(-50%); width:12px; height:12px; background:var(--turquesa); border-radius:50%; }
+    </style>
+</head>
+<body>
+    <div class="contenedor-principal">
+        <header class="cabecera">
+            <a href="principal.html" style="font-size:1.5rem; text-decoration:none;">🏠 Inicio</a>
+            <h1 class="titulo-principal">🏥 Historia Clínica Digital</h1>
+            <div>Fecha: <span id="fecha-actualizacion"></span></div>
+        </header>
+
+        <div class="search-section">
+            <input type="text" id="buscarPaciente" class="search-input" placeholder="Buscar por nombre o apellido...">
+            <button class="btn" onclick="buscarPaciente()">Buscar</button>
+        </div>
+
+        
+        <div id="tarjetaPaciente" class="tarjeta-paciente" style="display:none;"></div>
+
+        
+        <div id="lineaTiempo" class="linea-tiempo"></div>
+    </div>
+    <script src="js/historias.js"></script>
+</body>
+</html>
