@@ -18,7 +18,7 @@ document.getElementById("btn-agregar").addEventListener("click", async () => {
       if (data.success) {
           alert("Especialidad agregada correctamente");
           document.getElementById("nombre").value = "";
-          cargarEspecialidades(); // Vuelve a cargar la lista
+          cargarEspecialidades(); 
       } else {
           alert("Error al agregar: " + data.error);
       }

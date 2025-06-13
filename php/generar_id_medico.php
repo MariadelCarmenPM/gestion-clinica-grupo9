@@ -11,7 +11,7 @@ if (!$id_especialidad) {
     exit;
 }
 
-// Obtener el nombre de la especialidad
+
 $stmt = $conn->prepare("SELECT nombre FROM especialidades WHERE id_especialidad = ?");
 $stmt->bind_param("i", $id_especialidad);
 $stmt->execute();
@@ -23,11 +23,11 @@ if (!$especialidad) {
     exit;
 }
 
-// Generar prefijo del ID
-$nombre = preg_replace("/[^a-zA-Z]/", "", $especialidad['nombre']); // quitar caracteres no letras
-$prefijo = strtoupper(substr($nombre, 0, 5)); // 5 letras
 
-// Contar médicos con ese prefijo
+$nombre = preg_replace("/[^a-zA-Z]/", "", $especialidad['nombre']); 
+$prefijo = strtoupper(substr($nombre, 0, 5)); 
+
+
 $stmt2 = $conn->prepare("SELECT COUNT(*) AS total FROM medicos WHERE id_medico LIKE CONCAT(?, '%')");
 $stmt2->bind_param("s", $prefijo);
 $stmt2->execute();
@@ -37,7 +37,7 @@ $row = $result2->fetch_assoc();
 $total = $row['total'] + 1;
 $id_medico = $prefijo . str_pad($total, 2, '0', STR_PAD_LEFT);
 
-// Devolver ID generado
+
 echo json_encode(['success' => true, 'id_medico' => $id_medico]);
 exit;
 

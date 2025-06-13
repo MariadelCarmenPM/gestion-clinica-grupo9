@@ -140,7 +140,7 @@
                 </tr>
             </thead>
             <tbody id="patients-list">
-                <!-- Datos de pacientes se cargarán aquí -->
+               
             </tbody>
         </table>
 
@@ -180,7 +180,7 @@
     </div>
 
     <script>
-        // Datos iniciales de ejemplo
+        
         const patients = [
             {
                 id: 821224455,
@@ -191,10 +191,10 @@
                 phone: "9342352",
                 email: "josesa@"
             },
-            // ... agregar más pacientes según el ejemplo
+           
         ];
 
-        // Función para renderizar la tabla
+       
         function renderPatients() {
             const tbody = document.getElementById('patients-list');
             tbody.innerHTML = patients.map(patient => `
@@ -210,13 +210,13 @@
             `).join('');
         }
 
-        // Mostrar/ocultar formulario
+       
         function toggleAddForm() {
             const form = document.getElementById('addForm');
             form.style.display = form.style.display === 'none' ? 'block' : 'none';
         }
 
-        // Validación de formulario
+        
         document.getElementById('patientForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
@@ -236,7 +236,7 @@
             document.getElementById('patientForm').reset();
         });
 
-        // Inicializar tabla
+       
         renderPatients();
     </script>
 </body>

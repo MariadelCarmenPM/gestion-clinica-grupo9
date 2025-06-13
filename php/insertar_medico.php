@@ -2,7 +2,7 @@
 require_once "conexion.php";
 header('Content-Type: application/json');
 
-// Verifica que se reciban todos los campos necesarios
+
 if (
     isset($_POST['id_usuario'], $_POST['nombres'], $_POST['apellidos'], $_POST['cmp'],
           $_POST['id_especialidad'], $_POST['telefono'], $_POST['direccion'], $_POST['correo'])
@@ -16,7 +16,7 @@ if (
     $direccion = $_POST['direccion'];
     $correo = $_POST['correo'];
 
-    // Insertar en la base de datos
+    
     $sql = "INSERT INTO medicos (id_usuario, nombres, apellidos, cmp, id_especialidad, telefono, direccion, correo)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conexion->prepare($sql);
