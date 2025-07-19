@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-06-2025 a las 23:51:49
+-- Tiempo de generación: 17-07-2025 a las 05:02:48
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -33,6 +33,7 @@ CREATE TABLE `citas` (
   `id_medico` int(11) NOT NULL,
   `fecha_cita` date NOT NULL,
   `hora_cita` time NOT NULL,
+  `motivo_consulta` text DEFAULT NULL,
   `estado` enum('pendiente','atendida','cancelada') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -40,9 +41,13 @@ CREATE TABLE `citas` (
 -- Volcado de datos para la tabla `citas`
 --
 
-INSERT INTO `citas` (`id_cita`, `id_paciente`, `id_medico`, `fecha_cita`, `hora_cita`, `estado`) VALUES
-(1, 4, 8, '2025-06-21', '16:21:00', 'pendiente'),
-(2, 2, 9, '2025-06-26', '17:22:00', 'pendiente');
+INSERT INTO `citas` (`id_cita`, `id_paciente`, `id_medico`, `fecha_cita`, `hora_cita`, `motivo_consulta`, `estado`) VALUES
+(23, 18, 20, '2025-07-14', '07:00:00', 'Tengo mareos , vómitos y dolor de cabeza', 'pendiente'),
+(24, 4, 20, '2025-07-14', '07:30:00', 'Dolor de cuello en exceso. Mareos y visión nublosa', 'atendida'),
+(25, 5, 17, '2025-07-14', '07:00:00', 'Granitos con pus y dolor', 'atendida'),
+(26, 4, 24, '2025-07-18', '07:00:00', 'Dolor de estomago y vomitos. Menor de 6 años', 'atendida'),
+(27, 5, 24, '2025-07-18', '07:30:00', 'Malestar estomacal ', 'pendiente'),
+(35, 24, 24, '2025-07-18', '08:00:00', 'prueba sintomas', 'pendiente');
 
 -- --------------------------------------------------------
 
@@ -74,6 +79,7 @@ INSERT INTO `configuraciones` (`clave`, `valor`) VALUES
 CREATE TABLE `disponibilidad_medica` (
   `id_disponibilidad` int(11) NOT NULL,
   `id_medico` int(11) NOT NULL,
+  `fecha` date DEFAULT NULL,
   `dia_semana` enum('Lunes','Martes','Miércoles','Jueves','Viernes','Sábado') NOT NULL,
   `hora_inicio` time NOT NULL,
   `hora_fin` time NOT NULL
@@ -83,8 +89,12 @@ CREATE TABLE `disponibilidad_medica` (
 -- Volcado de datos para la tabla `disponibilidad_medica`
 --
 
-INSERT INTO `disponibilidad_medica` (`id_disponibilidad`, `id_medico`, `dia_semana`, `hora_inicio`, `hora_fin`) VALUES
-(1, 9, 'Jueves', '17:16:00', '17:17:00');
+INSERT INTO `disponibilidad_medica` (`id_disponibilidad`, `id_medico`, `fecha`, `dia_semana`, `hora_inicio`, `hora_fin`) VALUES
+(6, 20, '2025-07-07', 'Lunes', '07:00:00', '17:00:00'),
+(7, 17, '2025-07-08', 'Lunes', '07:00:00', '16:00:00'),
+(8, 20, '2025-07-14', 'Lunes', '07:00:00', '18:00:00'),
+(9, 17, '2025-07-14', 'Lunes', '07:00:00', '18:00:00'),
+(10, 24, '2025-07-18', 'Lunes', '07:00:00', '18:00:00');
 
 -- --------------------------------------------------------
 
@@ -102,9 +112,10 @@ CREATE TABLE `especialidades` (
 --
 
 INSERT INTO `especialidades` (`id_especialidad`, `nombre`) VALUES
-(17, 'Ginecología'),
-(18, 'Medicina general'),
-(19, 'Dermatología');
+(23, 'Medicina General'),
+(24, 'Dermatología'),
+(25, 'Psicología'),
+(26, 'Pediatría');
 
 -- --------------------------------------------------------
 
@@ -114,6 +125,7 @@ INSERT INTO `especialidades` (`id_especialidad`, `nombre`) VALUES
 
 CREATE TABLE `historias_clinicas` (
   `id_historia` int(11) NOT NULL,
+  `id_cita` int(11) DEFAULT NULL,
   `id_paciente` int(11) NOT NULL,
   `fecha_registro` date NOT NULL,
   `motivo_consulta` text NOT NULL,
@@ -126,13 +138,10 @@ CREATE TABLE `historias_clinicas` (
 -- Volcado de datos para la tabla `historias_clinicas`
 --
 
-INSERT INTO `historias_clinicas` (`id_historia`, `id_paciente`, `fecha_registro`, `motivo_consulta`, `diagnostico`, `tratamiento`, `id_medico`) VALUES
-(6, 4, '2025-06-19', 'Cita programada', '', '', 8),
-(7, 2, '2025-06-21', 'Cita programada', '', '', 8),
-(8, 2, '2025-06-25', 'Cita programada', '', '', 8),
-(9, 4, '2025-06-19', 'ulceras', 'TOMAR AMOXICILINA 500GR', '', 9),
-(11, 4, '2025-06-21', 'asd', '234', '', 8),
-(12, 2, '2025-06-26', '5645', 'fghdg', '', 9);
+INSERT INTO `historias_clinicas` (`id_historia`, `id_cita`, `id_paciente`, `fecha_registro`, `motivo_consulta`, `diagnostico`, `tratamiento`, `id_medico`) VALUES
+(26, 23, 18, '2025-07-13', 'Tengo mareos , vómitos y dolor de cabeza', '', '', 20),
+(27, 24, 4, '2025-07-13', 'Dolor de cuello en exceso. Mareos y visión nublosa', 'Golpe', 'Pomada', 20),
+(28, 25, 5, '2025-07-13', 'Granitos con pus y dolor', 'Infección', 'Crema', 17);
 
 -- --------------------------------------------------------
 
@@ -172,8 +181,11 @@ CREATE TABLE `medicos` (
 --
 
 INSERT INTO `medicos` (`id_medico`, `id_usuario`, `nombres`, `apellidos`, `cmp`, `id_especialidad`, `telefono`, `direccion`, `correo`) VALUES
-(8, 1, 'María', 'Prado', '1212', 17, '957589039', 'A.v Los Claveles, MzD3, Lote 03 , AAHH ANCIETA ALTA', 'amyabigail1522@gmail.com'),
-(9, 1, 'JUANA ', 'PORTILLO CARRASCO', '3131', 18, '999999888', 'AV LOS DURAZNOS', 'estrella111@hotmail.com');
+(17, 1, 'Pedro', 'Torres Balvin', '1314', 24, '999555666', 'Av Las garnolias Mz K lt 15', 'pedro_doctor@hotmail.com'),
+(20, 1, 'Anita Lusmila', 'Perez de la Torre', '1214', 23, '985687458', 'Av las magnolias151699', 'anadoctora@hotmail.com'),
+(22, 1, 'Carlos Andrés', 'Curtillo Agnes', '5859', 23, '900300210', 'Av los frescos Mz L, La Molina', 'carlosdoctor@gmail.com'),
+(23, 1, 'Amy Linn', 'Yun U', '8963', 25, '985689326', 'Av las begonias,Mz F, Lote 16, Surco', 'amydoctora@gmail.com'),
+(24, 1, 'Pedro Rafael', 'Perez Gómez', '48596', 26, '985687458', 'Av las casuarinas Mz L Miraflores', 'pedrodoctor@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -190,16 +202,20 @@ CREATE TABLE `pacientes` (
   `sexo` enum('M','F') NOT NULL,
   `direccion` varchar(150) DEFAULT NULL,
   `telefono` varchar(15) DEFAULT NULL,
-  `correo` varchar(100) DEFAULT NULL
+  `correo` varchar(100) DEFAULT NULL,
+  `id_usuario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `pacientes`
 --
 
-INSERT INTO `pacientes` (`id_paciente`, `dni`, `nombres`, `apellidos`, `fecha_nacimiento`, `sexo`, `direccion`, `telefono`, `correo`) VALUES
-(2, '72510489', 'María', 'Prado', '9999-04-22', 'M', 'A.v Los Claveles, MzD3, Lote 03 , AAHH ANCIETA ALTA', '957589039', 'mizhacore2204@gmail.com'),
-(4, '72516784', 'MARCO JUAN', 'ANTONILLO PORTILLO', '1998-05-15', 'M', 'AV LOS TERCEROS', '952647158', 'marco111@gmail.com');
+INSERT INTO `pacientes` (`id_paciente`, `dni`, `nombres`, `apellidos`, `fecha_nacimiento`, `sexo`, `direccion`, `telefono`, `correo`, `id_usuario`) VALUES
+(4, '72516784', 'Marco Juan', 'Prado Portillo', '1998-05-15', 'M', 'AV LOS TERCEROS', '952647158', 'marco111@gmail.com', NULL),
+(5, '78548154', 'Juan Manuel', 'Prado Manillo', '2025-05-14', 'F', 'Av Las Begonias Mz C Lote 20 a 2 cuadras antes del parque Pablo Patrón', '957589039', 'estrella111@hotmail.com', NULL),
+(18, '16124295', 'Cornelia Anita', 'Mendoza Gutierrez', '1980-09-17', 'F', 'Av. Los nogales 145 Santa Anita', '987855468', 'corneliapaciente@gmail.com', 14),
+(24, '77788899', 'Prueba', 'Prueba Prueba', '1996-01-22', 'F', 'dirección prueba', '999888555', 'prueba@gmail.com', 17),
+(25, '75842015', 'Maribel', 'Perez Cueva', '1997-01-15', 'F', 'Prueba direccion', '985698789', 'maribelpaciente@gmail.com', 18);
 
 -- --------------------------------------------------------
 
@@ -215,13 +231,6 @@ CREATE TABLE `reportes` (
   `generado_por` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `reportes`
---
-
-INSERT INTO `reportes` (`id_reporte`, `titulo`, `contenido`, `fecha_generado`, `generado_por`) VALUES
-(1, 'DOCU', 'ASFCSGBWRG', '2025-06-13 23:04:12', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -231,16 +240,21 @@ INSERT INTO `reportes` (`id_reporte`, `titulo`, `contenido`, `fecha_generado`, `
 CREATE TABLE `usuarios` (
   `id_usuario` int(11) NOT NULL,
   `nombre_usuario` varchar(50) NOT NULL,
-  `contraseña` varchar(100) NOT NULL,
-  `rol` enum('admin','recepcionista','medico') NOT NULL
+  `contrasena` varchar(100) NOT NULL,
+  `rol` enum('admin','paciente') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `usuarios`
 --
 
-INSERT INTO `usuarios` (`id_usuario`, `nombre_usuario`, `contraseña`, `rol`) VALUES
-(1, 'admin', '1234', 'admin');
+INSERT INTO `usuarios` (`id_usuario`, `nombre_usuario`, `contrasena`, `rol`) VALUES
+(1, 'admin', '1234', 'admin'),
+(4, 'marita@hotmail.com', '123456', 'paciente'),
+(13, 'marcopacizumilla@hotmail.com', '123456', 'paciente'),
+(14, 'corneliapaciente@gmail.com', '123456', 'paciente'),
+(17, 'prueba@gmail.com', '123456', 'paciente'),
+(18, 'maribelpaciente@gmail.com', '123456', 'paciente');
 
 --
 -- Índices para tablas volcadas
@@ -279,7 +293,8 @@ ALTER TABLE `especialidades`
 ALTER TABLE `historias_clinicas`
   ADD PRIMARY KEY (`id_historia`),
   ADD KEY `id_paciente` (`id_paciente`),
-  ADD KEY `id_medico` (`id_medico`);
+  ADD KEY `id_medico` (`id_medico`),
+  ADD KEY `fk_historia_cita` (`id_cita`);
 
 --
 -- Indices de la tabla `logs_consultas`
@@ -303,7 +318,8 @@ ALTER TABLE `medicos`
 --
 ALTER TABLE `pacientes`
   ADD PRIMARY KEY (`id_paciente`),
-  ADD UNIQUE KEY `dni` (`dni`);
+  ADD UNIQUE KEY `dni` (`dni`),
+  ADD KEY `fk_usuario` (`id_usuario`);
 
 --
 -- Indices de la tabla `reportes`
@@ -326,25 +342,25 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `citas`
 --
 ALTER TABLE `citas`
-  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `disponibilidad_medica`
 --
 ALTER TABLE `disponibilidad_medica`
-  MODIFY `id_disponibilidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_disponibilidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `especialidades`
 --
 ALTER TABLE `especialidades`
-  MODIFY `id_especialidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id_especialidad` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `historias_clinicas`
 --
 ALTER TABLE `historias_clinicas`
-  MODIFY `id_historia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id_historia` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `logs_consultas`
@@ -356,25 +372,25 @@ ALTER TABLE `logs_consultas`
 -- AUTO_INCREMENT de la tabla `medicos`
 --
 ALTER TABLE `medicos`
-  MODIFY `id_medico` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_medico` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT de la tabla `reportes`
 --
 ALTER TABLE `reportes`
-  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_reporte` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- Restricciones para tablas volcadas
@@ -397,6 +413,7 @@ ALTER TABLE `disponibilidad_medica`
 -- Filtros para la tabla `historias_clinicas`
 --
 ALTER TABLE `historias_clinicas`
+  ADD CONSTRAINT `fk_historia_cita` FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`),
   ADD CONSTRAINT `historias_clinicas_ibfk_1` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id_paciente`),
   ADD CONSTRAINT `historias_clinicas_ibfk_2` FOREIGN KEY (`id_medico`) REFERENCES `medicos` (`id_medico`);
 
@@ -410,8 +427,14 @@ ALTER TABLE `logs_consultas`
 -- Filtros para la tabla `medicos`
 --
 ALTER TABLE `medicos`
-  ADD CONSTRAINT `medicos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`),
-  ADD CONSTRAINT `medicos_ibfk_2` FOREIGN KEY (`id_especialidad`) REFERENCES `especialidades` (`id_especialidad`);
+  ADD CONSTRAINT `medicos_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
+
+--
+-- Filtros para la tabla `pacientes`
+--
+ALTER TABLE `pacientes`
+  ADD CONSTRAINT `fk_paciente_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`);
 
 --
 -- Filtros para la tabla `reportes`
