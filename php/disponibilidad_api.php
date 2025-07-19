@@ -13,22 +13,49 @@ if ($conn->connect_error) {
   exit;
 }
 
+
+if ($_SERVER["REQUEST_METHOD"] === "POST" && strpos($_SERVER["CONTENT_TYPE"], "application/json") !== false) {
+  $data = json_decode(file_get_contents("php://input"), true);
+  
+  if (isset($data["eliminar"]) && $data["eliminar"] === true && isset($data["id_disponibilidad"])) {
+    $stmt = $conn->prepare("DELETE FROM disponibilidad_medica WHERE id_disponibilidad = ?");
+    $stmt->bind_param("i", $data["id_disponibilidad"]);
+    $stmt->execute();
+    echo json_encode(["success" => true]);
+    exit;
+  }
+}
+
+// ✅ SE  VA A INSERTAR o ACTUALIZAR (POST FORM)
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+  $id = $_POST["id_disponibilidad"] ?? '';
   $id_medico = $_POST["medico"];
-  $dia = $_POST["dia"];
+  $fecha = $_POST["fecha"];
   $hora_inicio = $_POST["hora_inicio"];
   $hora_fin = $_POST["hora_fin"];
 
-  $stmt = $conn->prepare("INSERT INTO disponibilidad_medica (id_medico, dia_semana, hora_inicio, hora_fin) VALUES (?, ?, ?, ?)");
-  $stmt->bind_param("isss", $id_medico, $dia, $hora_inicio, $hora_fin);
-  $stmt->execute();
-  $stmt->close();
-  echo json_encode(["status" => "ok"]);
+  if ($id) {
+    // EDITAR
+    $stmt = $conn->prepare("UPDATE disponibilidad_medica SET id_medico=?, fecha=?, hora_inicio=?, hora_fin=? WHERE id_disponibilidad=?");
+    $stmt->bind_param("isssi", $id_medico, $fecha, $hora_inicio, $hora_fin, $id);
+  } else {
+    // GUARDAR NUEVO
+    $stmt = $conn->prepare("INSERT INTO disponibilidad_medica (id_medico, fecha, hora_inicio, hora_fin) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("isss", $id_medico, $fecha, $hora_inicio, $hora_fin);
+  }
+
+  if ($stmt->execute()) {
+    echo json_encode(["success" => true]);
+  } else {
+    echo json_encode(["success" => false, "error" => $stmt->error]);
+  }
+
   exit;
 }
 
+// ✅ LISTAR MÉDICOS
 if (isset($_GET["medicos"])) {
-  $result = $conn->query("SELECT id_medico, nombres, apellidos FROM medicos");
+  $result = $conn->query("SELECT id_medico, nombres, apellidos, id_especialidad FROM medicos");
   $medicos = [];
   while ($row = $result->fetch_assoc()) {
     $medicos[] = $row;
@@ -37,11 +64,12 @@ if (isset($_GET["medicos"])) {
   exit;
 }
 
+// ✅ LISTAR DISPONIBILIDAD
 if (isset($_GET["listar"])) {
-  $sql = "SELECT d.id_disponibilidad, CONCAT(m.nombres, ' ', m.apellidos) AS medico, d.dia_semana, d.hora_inicio, d.hora_fin
+  $sql = "SELECT d.id_disponibilidad, d.id_medico, CONCAT(m.nombres, ' ', m.apellidos) AS medico, d.fecha, d.hora_inicio, d.hora_fin
           FROM disponibilidad_medica d
           JOIN medicos m ON d.id_medico = m.id_medico
-          ORDER BY FIELD(d.dia_semana,'Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'), d.hora_inicio";
+          ORDER BY d.fecha ASC, d.hora_inicio ASC";
   $result = $conn->query($sql);
   $disponibilidad = [];
   while ($row = $result->fetch_assoc()) {
@@ -50,4 +78,4 @@ if (isset($_GET["listar"])) {
   echo json_encode($disponibilidad);
   exit;
 }
-
+?>

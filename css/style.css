@@ -118,3 +118,20 @@ th {
 .titulo-citas {
     text-align: center;
 }
+
+#resultadosPacientes, #resultadosMedicos {
+    border: 1px solid #ccc;
+    background-color: white;
+    position: absolute;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .resultado-item {
+    padding: 0.5rem;
+    cursor: pointer;
+  }
+  .resultado-item:hover {
+    background-color: #f0f0f0;
+  }

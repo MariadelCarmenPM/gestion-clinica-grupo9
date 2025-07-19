@@ -15,10 +15,7 @@
 </head>
 <body>
   <div class="grid">
-    <div class="card">
-      <div style="font-size:3rem;">👩‍⚕️</div>
-      <a href="php/medicos.php">Módulo Médicos</a>
-    </div>
+    
     <div class="card">
       <div style="font-size:3rem;">🏥</div>
       <a href="especialidades.html">Módulo Especialidades</a>
@@ -37,16 +34,28 @@
       </div>
       <div class="card">
         <div style="font-size:3rem;">🩺</div>
-        <a href="php/disponibilidad_medica.php">Disponibilidad Médica</a>
+        <a href="disponibilidad_medica.html">Disponibilidad Médica</a>
       </div>
       <div class="card">
         <div style="font-size:3rem;">📝</div>
-        <a href="reportes.html">Reportes</a>
+        <a href="reportes_detallados.html">Reportes</a>
       </div>
       <div class="card">
         <div style="font-size:3rem;">⚙️</div>
         <a href="configuraciones.html">Configuraciones</a>
       </div>
+      <div class="card">
+        <div style="font-size:3rem;">🚪</div>
+        <a href="#" id="btnLogout">Cerrar Sesión</a>
+      </div>
+      
+      <script>
+        document.getElementById('btnLogout').addEventListener('click', function(e) {
+          e.preventDefault();
+          localStorage.removeItem('usuario');
+          window.location.href = 'index.html';
+        });
+      </script>
   </div>
 </body>
 </html>

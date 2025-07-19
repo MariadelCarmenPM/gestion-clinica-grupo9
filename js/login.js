@@ -1,36 +1,24 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('loginForm');
-  
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-  
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value.trim();
-  
-      if (!username || !password) {
-        alert("Completa todos los campos.");
-        return;
-      }
-  
-      try {
-        const response = await fetch('php/verificar_login.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
-        });
-  
-        const result = await response.json();
-  
-        if (result.success) {
-          window.location.href = 'principal.html';
-        } else {
-          alert(result.message);
-        }
-  
-      } catch (error) {
-        console.error("Error en la solicitud:", error);
-        alert("Error al intentar iniciar sesión.");
-      }
-    });
+document.getElementById('registroForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const fd = new FormData(form);
+  const fn = fd.get('fecha_nacimiento');
+
+  if (new Date().getFullYear() - new Date(fn).getFullYear() < 18) {
+    return alert('⛔ Debes tener 18 años o más para registrarte.');
+  }
+
+  const res = await fetch('php/registrar_paciente.php', {
+    method: 'POST',
+    body: fd
   });
-  
+
+  const data = await res.json();
+  if (data.success) {
+    alert('✅ Registro exitoso. Ya puedes iniciar sesión.');
+    form.reset();
+    cerrarRegistro();
+  } else {
+    alert('❌ ' + data.error);
+  }
+});
